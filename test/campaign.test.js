@@ -56,4 +56,11 @@ describe("Campaign Contract", function() {
         const manager = await campaignContract.methods.manager().call();
         assert.equal(manager, accounts[0]);
     });
+
+    it("allows people to donate and become approvers", async function() {
+        await campaignContract.methods
+            .contribute()
+            .send({ from: accounts[1], value: "1000" });
+        assert.ok(campaignContract.methods.approvers(accounts[1]));
+    });
 });
