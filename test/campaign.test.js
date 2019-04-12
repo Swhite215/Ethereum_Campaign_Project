@@ -61,9 +61,9 @@ describe("Campaign Contract", function() {
         await campaignContract.methods
             .contribute()
             .send({ from: accounts[1], value: "1000" });
-        const isApprover = await campaignContract.methods.approvers(
-            accounts[1]
-        );
+        const isApprover = await campaignContract.methods
+            .approvers(accounts[1])
+            .call();
         assert.ok(isApprover);
     });
 
@@ -76,5 +76,16 @@ describe("Campaign Contract", function() {
         } catch (e) {
             assert(e);
         }
+    });
+
+    it("allows a manager to create a payment request", async function() {
+        await campaignContract.methods
+            .createRequest("OEM", "1000", accounts[1])
+            .send({ from: accounts[0], gas: "1000000" });
+
+        const request = await campaignContract.methods.requests(0).call();
+
+        assert(request);
+        assert.equal("OEM", request.description);
     });
 });
