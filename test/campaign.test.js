@@ -16,8 +16,9 @@ beforeEach(async function() {
     accounts = await web3.eth.getAccounts();
 
     //Create a Factory Contract
-    factoryContract = await web3.eth
-        .Contract(JSON.parse(compiledCampaignFactory.interface))
+    factoryContract = await new web3.eth.Contract(
+        JSON.parse(compiledCampaignFactory.interface)
+    )
         .deploy({ data: compiledCampaignFactory.bytecode })
         .send({ from: accounts[0], gas: "1000000" });
 
@@ -29,7 +30,7 @@ beforeEach(async function() {
     //Find the address for the deployed Campaign Contract
     [
         campaignAddress
-    ] = await factoryContract.method
+    ] = await factoryContract.methods
         .getDeployedCampaigns()
         .call({ from: accounts[0] });
 
@@ -40,6 +41,14 @@ beforeEach(async function() {
     );
 });
 
-describe("Campaign Factory Contract", function() {});
+describe("Campaign Factory Contract", function() {
+    it("deploys a campaign factory", function() {
+        assert.ok(factoryContract.options.address);
+    });
+});
 
-describe("Campaign Contract", function() {});
+describe("Campaign Contract", function() {
+    it("deploys a campaign", function() {
+        assert.ok(campaignContract.options.address);
+    });
+});
