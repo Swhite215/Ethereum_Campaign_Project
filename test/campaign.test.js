@@ -61,6 +61,20 @@ describe("Campaign Contract", function() {
         await campaignContract.methods
             .contribute()
             .send({ from: accounts[1], value: "1000" });
-        assert.ok(campaignContract.methods.approvers(accounts[1]));
+        const isApprover = await campaignContract.methods.approvers(
+            accounts[1]
+        );
+        assert.ok(isApprover);
+    });
+
+    it("requires a minimum contribution", async function() {
+        try {
+            await campaignContract.methods
+                .contribute()
+                .send({ from: accounts[0], value: "1" });
+            assert(false);
+        } catch (e) {
+            assert(e);
+        }
     });
 });
