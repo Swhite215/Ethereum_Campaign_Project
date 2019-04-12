@@ -42,13 +42,18 @@ beforeEach(async function() {
 });
 
 describe("Campaign Factory Contract", function() {
-    it("deploys a campaign factory", function() {
+    it("deploys a campaign factory contract", function() {
         assert.ok(factoryContract.options.address);
     });
 });
 
 describe("Campaign Contract", function() {
-    it("deploys a campaign", function() {
+    it("deploys a campaign contract", function() {
         assert.ok(campaignContract.options.address);
+    });
+
+    it("marks caller as the campaign manager", async function() {
+        const manager = await campaignContract.methods.manager().call();
+        assert.equal(manager, accounts[0]);
     });
 });
