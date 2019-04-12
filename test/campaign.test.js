@@ -88,4 +88,34 @@ describe("Campaign Contract", function() {
         assert(request);
         assert.equal("OEM", request.description);
     });
+
+    it("fully processes requests", async function() {
+        await campaignContract.methods.contribute().send({
+            from: accounts[0],
+            value: web3.utils.toWei("10", "ether")
+        });
+
+        await campaignContract.methods
+            .createRequest("OEM", web3.utils.toWei("5", "ether"), accounts[1])
+            .send({ from: accounts[0], gas: "1000000" });
+
+        await campaignContract.methods
+            .approveRequest(0)
+            .send({ from: accounts[0], gas: "1000000" });
+
+        let startBalance = await web3.eth.getBalance(accounts[1]);
+        startBalance = web3.utils.fromWei(startBalance, "ether");
+        startBalance = parseFloat(startBalance);
+
+        await campaignContract.methods
+            .finalizeRequest(0)
+            .send({ from: accounts[0], gas: "1000000" });
+
+        let endBalance = await web3.eth.getBalance(accounts[1]);
+        endBalance = web3.utils.fromWei(endBalance, "ether");
+        endBalance = parseFloat(endBalance);
+
+        assert(endBalance > startBalance);
+        assert(endBalance - startBalance > 4);
+    });
 });
