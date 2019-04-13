@@ -84,6 +84,23 @@ contract Campaign {
         request.recipient.transfer(request.value); //Send to the recipient the value of the request
         request.complete = true; //Mark the requests as complete
     }
+
+    //getSummary methods, to get information for FE UI
+    function getSummary() public view returns (uint, uint, uint, uint, address) {
+        return (
+            minimumContribution,
+            this.balance,
+            requests.length,
+            approversCount,
+            manager
+        );
+
+    }
+
+    //getRequestsCount, get number of requests
+    function getRequestsCount() public view returns (uint) {
+        return requests.length;
+    }
     
     
 }
