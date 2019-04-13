@@ -11,12 +11,13 @@ class CampaignIndex extends React.Component {
         };
     }
 
-    async componentDidMount() {
+    //Function is assigned to class, not instances
+    static async getInitialProps() {
         const campaigns = await campaignFactory.methods
             .getDeployedCampaigns()
             .call();
 
-        console.log(campaigns);
+        return { campaigns };
     }
 
     render() {
@@ -30,7 +31,7 @@ class CampaignIndex extends React.Component {
         //     }
         // });
 
-        return <h1>This is the root app!</h1>;
+        return <div>{this.props.campaigns[0]}</div>;
     }
 }
 
