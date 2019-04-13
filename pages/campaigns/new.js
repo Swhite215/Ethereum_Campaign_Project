@@ -10,7 +10,8 @@ export class CampaignNew extends Component {
 
         this.state = {
             minimumContribution: "",
-            errorMessage: ""
+            errorMessage: "",
+            loading: false
         };
 
         this.onChange = this.onChange.bind(this);
@@ -25,6 +26,11 @@ export class CampaignNew extends Component {
 
     async onSubmit(e) {
         e.preventDefault();
+
+        this.setState({
+            loading: true,
+            errorMessage: ""
+        });
 
         try {
             await window.ethereum.enable();
@@ -42,13 +48,20 @@ export class CampaignNew extends Component {
                 errorMessage: e.message
             });
         }
+
+        this.setState({
+            loading: false
+        });
     }
 
     render() {
         return (
             <Layout>
                 <h3>New Campaign</h3>
-                <Form onSubmit={this.onSubmit}>
+                <Form
+                    onSubmit={this.onSubmit}
+                    error={!!this.state.errorMessage}
+                >
                     <Form.Field>
                         <label>Minimum Contribution</label>
                         <Input
@@ -59,7 +72,14 @@ export class CampaignNew extends Component {
                             onChange={this.onChange}
                         />
                     </Form.Field>
-                    <Button primary>Create</Button>
+                    <Message
+                        error
+                        header="Oops!"
+                        content={this.state.errorMessage}
+                    />
+                    <Button loading={this.state.loading} primary>
+                        Create
+                    </Button>
                 </Form>
             </Layout>
         );
