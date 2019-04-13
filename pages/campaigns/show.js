@@ -1,8 +1,15 @@
 import React, { Component } from "react";
 import Layout from "../../components/Layout";
 import campaignInstance from "../../ethereum/campaign";
+import { Card } from "semantic-ui-react";
 
 class CampaignShow extends Component {
+    constructor(props) {
+        super(props);
+
+        this.renderCards = this.renderCards.bind(this);
+    }
+
     static async getInitialProps(props) {
         let campaign = campaignInstance(props.query.address);
         let summary = await campaign.methods.getSummary().call();
@@ -17,10 +24,60 @@ class CampaignShow extends Component {
         };
     }
 
+    renderCards() {
+        const {
+            minimumContribution,
+            balance,
+            requestsCount,
+            approversCount,
+            manager
+        } = this.props;
+
+        const items = [
+            {
+                header: manager,
+                meta: "Address of Manager",
+                description:
+                    "The manager who created this campaign and can create requests to withdraw money.",
+                style: { overflowWrap: "break-word" }
+            },
+            {
+                header: minimumContribution,
+                meta: "Minimum Contribution in Wei",
+                description:
+                    "The minimum amount needed to be an approver of this campaign.",
+                style: { overflowWrap: "break-word" }
+            },
+            {
+                header: balance,
+                meta: "Campaign's current balance",
+                description: "The current collected money for this campaign.",
+                style: { overflowWrap: "break-word" }
+            },
+            {
+                header: requestsCount,
+                meta: "Number of Requests",
+                description:
+                    "This is the number of requests made by this campaign.",
+                style: { overflowWrap: "break-word" }
+            },
+            {
+                header: approversCount,
+                meta: "Number of Contributors",
+                description:
+                    "The current number of people who have contributed to this campaign.",
+                style: { overflowWrap: "break-word" }
+            }
+        ];
+
+        return <Card.Group items={items} />;
+    }
+
     render() {
         return (
             <Layout>
                 <h3>Campaign Shows</h3>
+                {this.renderCards()}
             </Layout>
         );
     }
