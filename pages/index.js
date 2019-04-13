@@ -12,6 +12,8 @@ class CampaignIndex extends React.Component {
         this.state = {
             message: "Hello"
         };
+
+        this.renderCampaigns = this.renderCampaigns.bind(this);
     }
 
     //Function is assigned to class, not instances
