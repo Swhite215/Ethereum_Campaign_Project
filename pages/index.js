@@ -3,6 +3,7 @@ import campaignFactory from "../ethereum/campaignFactory";
 import web3 from "../ethereum/web3";
 import { Card, Button } from "semantic-ui-react";
 import Layout from "../components/Layout";
+import { Link } from "../routes";
 
 class CampaignIndex extends React.Component {
     constructor(props) {
@@ -26,7 +27,11 @@ class CampaignIndex extends React.Component {
         const items = this.props.campaigns.map(campaign => {
             return {
                 header: campaign,
-                description: <a>View Campaign</a>,
+                description: (
+                    <Link route={`/campaigns/${campaign}`}>
+                        <a>View Campaign</a>
+                    </Link>
+                ),
                 fluid: true
             };
         });
@@ -50,12 +55,17 @@ class CampaignIndex extends React.Component {
         return (
             <Layout>
                 <h3>Active Campaigns</h3>
-                <Button
-                    floated="right"
-                    content="Create a Campaign"
-                    icon="add circle"
-                    primary
-                />
+                <Link route="/campaigns/new">
+                    <a>
+                        {" "}
+                        <Button
+                            floated="right"
+                            content="Create a Campaign"
+                            icon="add circle"
+                            primary
+                        />
+                    </a>
+                </Link>
                 {this.renderCampaigns()}
             </Layout>
         );
