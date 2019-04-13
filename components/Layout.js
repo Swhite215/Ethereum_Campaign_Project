@@ -1,13 +1,14 @@
 import React from "react";
 import Header from "./Header";
+import { Container } from "semantic-ui-react";
 
 const Layout = props => {
     return (
-        <div>
+        <Container>
             <Header />
             {props.children}
             <footer>FOOTER</footer>
-        </div>
+        </Container>
     );
 };
 
