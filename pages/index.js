@@ -34,17 +34,19 @@ class CampaignIndex extends React.Component {
         return <Card.Group items={items} />;
     }
 
-    render() {
-        // window.addEventListener("load", async () => {
-        //     if (window.ethereum) {
-        //         try {
-        //             await window.ethereum.enable();
-        //         } catch (e) {
-        //             //User denied account access
-        //         }
-        //     }
-        // });
+    componentDidMount() {
+        window.addEventListener("load", async () => {
+            if (window.ethereum) {
+                try {
+                    await window.ethereum.enable();
+                } catch (e) {
+                    //User denied account access
+                }
+            }
+        });
+    }
 
+    render() {
         return (
             <Layout>
                 <h3>Active Campaigns</h3>
