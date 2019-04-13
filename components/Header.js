@@ -3,7 +3,7 @@ import { Menu } from "semantic-ui-react";
 
 export default function Header() {
     return (
-        <Menu>
+        <Menu style={{ marginTop: "10px" }}>
             <Menu.Item name="Campaign">Campaign project</Menu.Item>
 
             <Menu.Menu position="right">
