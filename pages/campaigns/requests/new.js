@@ -17,7 +17,9 @@ class RequestNew extends Component {
         this.state = {
             value: "",
             description: "",
-            recipient: ""
+            recipient: "",
+            errorMessage: "",
+            loading: false
         };
 
         this.onChange = this.onChange.bind(this);
@@ -30,12 +32,49 @@ class RequestNew extends Component {
         });
     }
 
-    onSubmit(e) {}
+    async onSubmit(e) {
+        e.preventDefault();
+
+        this.setState({ loading: true });
+
+        const { description, value, recipient } = this.state;
+
+        try {
+            let accounts = await web3.eth.getAccounts();
+
+            const campaign = campaignInstance(this.props.address);
+
+            await campaign.methods
+                .createRequest(
+                    description,
+                    web3.utils.toWei(value, "ether"),
+                    recipient
+                )
+                .send({ from: accounts[0] });
+
+            Router.pushRoute(`/campaigns/${this.props.address}/requests`);
+        } catch (e) {
+            this.setState({ errorMessage: e.message });
+        }
+
+        this.setState({
+            loading: false,
+            description: "",
+            value: "",
+            recipient: ""
+        });
+    }
 
     render() {
         return (
             <Layout>
-                <Form>
+                <Link route={`/campaigns/${this.props.address}/requests`}>
+                    <a>Back</a>
+                </Link>
+                <Form
+                    onSubmit={this.onSubmit}
+                    error={!!this.state.errorMessage}
+                >
                     <h3>Create a Spending Request</h3>
                     <Form.Field>
                         <label>Description</label>
@@ -61,7 +100,14 @@ class RequestNew extends Component {
                             onChange={this.onChange}
                         />
                     </Form.Field>
-                    <Button primary>Add Request</Button>
+                    <Button loading={this.state.loading} primary>
+                        Add Request
+                    </Button>
+                    <Message
+                        error
+                        header="Oops!"
+                        content={this.state.errorMessage}
+                    />
                 </Form>
             </Layout>
         );
